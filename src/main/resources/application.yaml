@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: SocksOrder
+
+  datasource:
+    url: {DB_URI:jdbc:postgresql://127.0.0.1:6432/order_service}
