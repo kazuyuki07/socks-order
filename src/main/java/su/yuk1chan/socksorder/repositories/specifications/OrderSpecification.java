@@ -1,14 +1,15 @@
 package su.yuk1chan.socksorder.repositories.specifications;
 
 import org.springframework.data.jpa.domain.Specification;
-import su.yuk1chan.socksorder.entities.Orders;
+import su.yuk1chan.socksorder.entities.Order;
 import su.yuk1chan.socksorder.enums.Status;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public class OrdersSpecification {
-    public static Specification<Orders> orderNumberFilter(String orderNumber) {
+
+public class OrderSpecification {
+    public static Specification<Order> orderNumberFilter(String orderNumber) {
         return (root, _, builder) ->
                 orderNumber == null || orderNumber.isEmpty() ? null : builder.like(
                         builder.lower(root.get("orderNumber")),
@@ -16,22 +17,22 @@ public class OrdersSpecification {
                 );
     }
 
-    public static Specification<Orders> producerIdsFilter(List<Long> producerIds) {
+    public static Specification<Order> producerIdsFilter(List<Long> producerIds) {
         return (root, _, _) ->
             producerIds == null || producerIds.isEmpty() ? null : root.get("producerId").in(producerIds);
     }
 
-    public static Specification<Orders> statusFilter(Status status) {
+    public static Specification<Order> statusFilter(Status status) {
         return (root, _, builder) ->
                 status == null ? null : builder.equal(root.get("status"), status);
     }
 
-    public static Specification<Orders> socksIdsFilter(List<Long> socksIds) {
+    public static Specification<Order> socksIdsFilter(List<Long> socksIds) {
         return (root, _, _) ->
                 socksIds == null || socksIds.isEmpty() ? null : root.get("socksId").in(socksIds);
     }
 
-    public static Specification<Orders> quantityFilter(Integer minQuantity, Integer maxQuantity) {
+    public static Specification<Order> quantityFilter(Integer minQuantity, Integer maxQuantity) {
         return (root, _, builder) -> {
             if (minQuantity == null && maxQuantity == null) {
                 return null;
@@ -49,7 +50,7 @@ public class OrdersSpecification {
         };
     }
 
-    public static Specification<Orders> createdAtFilter(LocalDate createdAt) {
+    public static Specification<Order> createdAtFilter(LocalDate createdAt) {
         return (root, _, builder) ->
             createdAt == null ? null : builder.greaterThanOrEqualTo(root.get("createdAt"), createdAt);
     }

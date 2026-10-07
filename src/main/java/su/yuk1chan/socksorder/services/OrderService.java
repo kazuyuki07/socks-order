@@ -7,15 +7,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import su.yuk1chan.socksorder.dto.OrdersDTO;
+import su.yuk1chan.socksorder.dto.OrderDTO;
 import su.yuk1chan.socksorder.dto.PagedResponse;
-import su.yuk1chan.socksorder.entities.Orders;
-import su.yuk1chan.socksorder.enums.OrdersSort;
+import su.yuk1chan.socksorder.entities.Order;
+import su.yuk1chan.socksorder.enums.OrderSort;
 import su.yuk1chan.socksorder.enums.Status;
 import su.yuk1chan.socksorder.exceptions.NotFoundException;
-import su.yuk1chan.socksorder.mapper.OrdersMapper;
-import su.yuk1chan.socksorder.repositories.OrdersRepository;
-import su.yuk1chan.socksorder.repositories.specifications.OrdersSpecification;
+import su.yuk1chan.socksorder.mapper.OrderMapper;
+import su.yuk1chan.socksorder.repositories.OrderRepository;
+import su.yuk1chan.socksorder.repositories.specifications.OrderSpecification;
 import su.yuk1chan.socksorder.utils.OrderNumberGenerator;
 
 import java.time.LocalDate;
@@ -25,10 +25,10 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class OrderService {
-    private final OrdersRepository ordersRepository;
-    private final OrdersMapper ordersMapper;
+    private final OrderRepository orderRepository;
+    private final OrderMapper orderMapper;
 
-    public PagedResponse<OrdersDTO> getOrders(
+    public PagedResponse<OrderDTO> getOrders(
         Integer page,
         Integer size,
         String orderNumber,
@@ -39,66 +39,64 @@ public class OrderService {
         Integer maxQuantity,
         LocalDate createdAt,
         String sort) {
-            Specification<Orders> ordersSpecification = Specification.where(
-                OrdersSpecification.orderNumberFilter(orderNumber)
-                .and(OrdersSpecification.producerIdsFilter(producerIds))
-                .and(OrdersSpecification.statusFilter(status))
-                .and(OrdersSpecification.socksIdsFilter(socksIds))
-                .and(OrdersSpecification.quantityFilter(minQuantity, maxQuantity))
-                .and(OrdersSpecification.createdAtFilter(createdAt))
+            Specification<Order> ordersSpecification = Specification.where(
+                OrderSpecification.orderNumberFilter(orderNumber)
+                .and(OrderSpecification.producerIdsFilter(producerIds))
+                .and(OrderSpecification.statusFilter(status))
+                .and(OrderSpecification.socksIdsFilter(socksIds))
+                .and(OrderSpecification.quantityFilter(minQuantity, maxQuantity))
+                .and(OrderSpecification.createdAtFilter(createdAt))
             );
 
-            OrdersSort ordersSort = OrdersSort.of(sort);
-
+            OrderSort orderSort = OrderSort.of(sort);
             Sort sorted = Sort.by(
-                ordersSort.getDirection(),
-                ordersSort.getEntityValue()
+                orderSort.getDirection(),
+                orderSort.getEntityValue()
             );
 
-            Page<Orders> orders = ordersRepository.findAll(
+            Page<Order> orders = orderRepository.findAll(
                 ordersSpecification,
                 PageRequest.of(page, size, sorted)
             );
             
             return PagedResponse.from(orders
-                .map(ordersMapper::ordersToOrdersDTO)
+                .map(orderMapper::orderToOrderDTO)
             );
 
     }
 
-    public Orders createNewOrder(OrdersDTO ordersDTO) {
+    public Order createNewOrder(OrderDTO orderDTO) {
         LocalDateTime dateNow = LocalDateTime.now();
-        Orders newOrder = Orders.builder()
+        Order newOrder = Order.builder()
                 .orderNumber(OrderNumberGenerator.generate(dateNow))
-                .producerId(ordersDTO.getProducerId())
-                .status(ordersDTO.getStatus())
-                .socksId(ordersDTO.getSocksId())
-                .quantity(ordersDTO.getQuantity())
+                .producerId(orderDTO.getProducerId())
+                .status(orderDTO.getStatus())
+                .orderContents(orderDTO.getOrderContents())
                 .createdAt(dateNow)
                 .build();
 
-        return ordersRepository.save(newOrder);
+        return orderRepository.save(newOrder);
     }
 
-    public Orders fullUpdateOrderById(Long id, OrdersDTO ordersDTO) {
-        Orders foundOrder = ordersRepository.findById(id)
+    public Order fullUpdateOrderById(Long id, OrderDTO orderDTO) {
+        Order foundOrder = orderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Не найден заказ id" + id));
 
-        ordersMapper.fullUpdateOrder(ordersDTO, foundOrder);
+        orderMapper.fullUpdateOrder(orderDTO, foundOrder);
 
-        return ordersRepository.save(foundOrder);
+        return orderRepository.save(foundOrder);
     }
 
-    public Orders partUpdateOrderById(Long id, OrdersDTO ordersDTO) {
-        Orders foundOrder = ordersRepository.findById(id)
+    public Order partUpdateOrderById(Long id, OrderDTO orderDTO) {
+        Order foundOrder = orderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Не найден заказ id" + id));
 
-        ordersMapper.partUpdateOrder(ordersDTO, foundOrder);
+        orderMapper.partUpdateOrder(orderDTO, foundOrder);
 
-        return ordersRepository.save(foundOrder);
+        return orderRepository.save(foundOrder);
     }
 
     public void deleteOrderById(Long id) {
-        ordersRepository.deleteById(id);
+        orderRepository.deleteById(id);
     }
 }

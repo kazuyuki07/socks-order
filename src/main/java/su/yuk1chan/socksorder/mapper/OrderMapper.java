@@ -4,14 +4,14 @@ import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
-import su.yuk1chan.socksorder.dto.OrdersDTO;
-import su.yuk1chan.socksorder.entities.Orders;
+import su.yuk1chan.socksorder.dto.OrderDTO;
+import su.yuk1chan.socksorder.entities.Order;
 
 @Mapper(componentModel = "spring")
-public interface OrdersMapper {
-    OrdersDTO ordersToOrdersDTO(Orders orders);
-    void fullUpdateOrder(OrdersDTO ordersDTO, @MappingTarget Orders orders);
+public interface OrderMapper {
+    OrderDTO orderToOrderDTO(Order order);
+    void fullUpdateOrder(OrderDTO orderDTO, @MappingTarget Order order);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void partUpdateOrder(OrdersDTO ordersDTO, @MappingTarget Orders orders);
+    void partUpdateOrder(OrderDTO orderDTO, @MappingTarget Order order);
 }

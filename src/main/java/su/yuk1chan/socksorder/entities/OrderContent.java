@@ -3,6 +3,8 @@ package su.yuk1chan.socksorder.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -11,13 +13,14 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 @Table(name = "orders_content")
-public class OrdersContent {
+public class OrderContent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "order_id")
-    private Long orderId;
+    @ManyToOne(targetEntity = Order.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    private Order order;
 
     @Column(name = "socks_id")
     private Long socksId;

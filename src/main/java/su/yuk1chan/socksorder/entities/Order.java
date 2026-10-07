@@ -5,6 +5,7 @@ import lombok.*;
 import su.yuk1chan.socksorder.enums.Status;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Builder
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 @ToString
 @Table(name = "orders")
-public class Orders {
+public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,9 +29,8 @@ public class Orders {
 
     private Status status;
 
-    @Column(name = "socks_id")
-    private Long socksId;
-    private Integer quantity;
+    @OneToMany(targetEntity = OrderContent.class, fetch = FetchType.LAZY, mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderContent> orderContents;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
