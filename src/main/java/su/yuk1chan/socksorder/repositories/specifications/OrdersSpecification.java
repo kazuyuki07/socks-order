@@ -49,7 +49,7 @@ public class OrdersSpecification {
         };
     }
 
-    public static Specification<Orders> dateFilter(LocalDate createdAt) {
+    public static Specification<Orders> createdAtFilter(LocalDate createdAt) {
         return (root, _, builder) ->
             createdAt == null ? null : builder.greaterThanOrEqualTo(root.get("createdAt"), createdAt);
     }

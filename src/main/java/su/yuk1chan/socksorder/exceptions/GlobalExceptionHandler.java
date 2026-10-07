@@ -15,4 +15,10 @@ public class GlobalExceptionHandler {
     public ErrorResponse notFoundExceptionHandle(NotFoundException nfe) {
         return new ErrorResponse(nfe.getMessage());
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse illegalArgumentExceptionHandle(IllegalArgumentException iae) {
+        return new ErrorResponse(iae.getMessage());
+    }
 }
