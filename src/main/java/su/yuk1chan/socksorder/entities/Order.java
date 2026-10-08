@@ -29,7 +29,12 @@ public class Order {
 
     private Status status;
 
-    @OneToMany(targetEntity = OrderContent.class, fetch = FetchType.LAZY, mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToMany(
+        targetEntity = OrderContent.class, 
+        fetch = FetchType.LAZY, 
+        mappedBy = "order", 
+        cascade = CascadeType.ALL
+    )
     private List<OrderContent> orderContents;
 
     @Column(name = "created_at")

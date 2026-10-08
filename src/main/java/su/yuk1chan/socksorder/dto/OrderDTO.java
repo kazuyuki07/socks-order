@@ -19,8 +19,6 @@ public class OrderDTO {
     private Long producerId;
     private Status status;
     private List<OrderContent> orderContents;
-    private Long socksId;
-    private Integer quantity;
 
     @JsonFormat(pattern = "dd.MM.yyyy HH:mm")
     private LocalDateTime createdAt;
