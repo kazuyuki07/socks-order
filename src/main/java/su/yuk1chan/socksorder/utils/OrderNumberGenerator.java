@@ -22,11 +22,4 @@ public class OrderNumberGenerator {
 
         return String.format(ORDER_NUMBER_PATTERN, dateTimeString, Math.abs(hash + hash1 + hash2 + hash3));
     }
-
-    public static void main(String[] args) {
-        LocalDateTime now = LocalDateTime.now();
-        System.out.println(generate(now));
-        System.out.println(generate(now));
-        System.out.println(generate(LocalDateTime.now()));
-    }
 }
