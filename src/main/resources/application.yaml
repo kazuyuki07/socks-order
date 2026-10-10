@@ -6,10 +6,16 @@ spring:
     cron: "0 0 0 0 *"
 
   datasource:
-    url: ${DB_URI:jdbc:postgresql://127.0.0.1:6432/order_service}
+    url: ${DB_URI:jdbc:postgresql://127.0.0.1:2432/order_service}
     username: ${DB_USER:postgres}
     password: ${DB_PASSWORD:root}
     driver-class-name: org.postgresql.Driver
+
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog.yaml
+    enabled: true
+    drop-first: false
+    default-schema: public
 
 server:
   port: 2010

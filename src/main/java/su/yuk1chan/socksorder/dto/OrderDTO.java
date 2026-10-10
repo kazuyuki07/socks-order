@@ -1,6 +1,9 @@
 package su.yuk1chan.socksorder.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import su.yuk1chan.socksorder.entities.OrderContent;
 import su.yuk1chan.socksorder.enums.Status;
@@ -15,11 +18,20 @@ import java.util.List;
 @EqualsAndHashCode
 @ToString
 public class OrderDTO {
+
+    @NotBlank(message = "Номер заказа не может быть пустым")
     private String orderNumber;
+
+    @NotNull(message = "ID поставщика не может быть пустым")
     private Long producerId;
+
+    @NotNull(message = "Статус не может быть пустым")
     private Status status;
+
+    @NotEmpty(message = "Содержимое заказа не может быть пустым")
     private List<OrderContent> orderContents;
 
     @JsonFormat(pattern = "dd.MM.yyyy HH:mm")
+    @NotNull(message = "Дата создания не может быть пустой")
     private LocalDateTime createdAt;
 }

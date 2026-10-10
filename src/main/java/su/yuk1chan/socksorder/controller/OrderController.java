@@ -1,5 +1,6 @@
 package su.yuk1chan.socksorder.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -48,21 +49,21 @@ public class OrderController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public OrderDTO createNewOrder(@RequestBody OrderDTO orderDTO) {
+    public OrderDTO createNewOrder(@Valid @RequestBody OrderDTO orderDTO) {
         Order newOrder = orderService.createNewOrder(orderDTO);
 
         return orderMapper.orderToOrderDTO(newOrder);
     }
 
     @PutMapping("/{orderId}")
-    public OrderDTO fullUpdateOrderById(@PathVariable Long orderId, @RequestBody OrderDTO orderDTO) {
+    public OrderDTO fullUpdateOrderById(@PathVariable Long orderId, @Valid @RequestBody OrderDTO orderDTO) {
         Order updatedOrder = orderService.fullUpdateOrderById(orderId, orderDTO);
 
         return orderMapper.orderToOrderDTO(updatedOrder);
     }
 
     @PatchMapping("/{orderId}")
-    public OrderDTO partUpdateOrderById(@PathVariable Long orderId, @RequestBody OrderDTO orderDTO) {
+    public OrderDTO partUpdateOrderById(@PathVariable Long orderId, @Valid @RequestBody OrderDTO orderDTO) {
         Order patchUpdatedOrder = orderService.partUpdateOrderById(orderId, orderDTO);
 
         return orderMapper.orderToOrderDTO(patchUpdatedOrder);
