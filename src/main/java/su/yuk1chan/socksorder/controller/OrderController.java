@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import su.yuk1chan.socksorder.dto.OrderCreateDTO;
 import su.yuk1chan.socksorder.dto.OrderDTO;
 import su.yuk1chan.socksorder.dto.PagedResponse;
 import su.yuk1chan.socksorder.entities.Order;
@@ -49,8 +50,8 @@ public class OrderController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public OrderDTO createNewOrder(@Valid @RequestBody OrderDTO orderDTO) {
-        Order newOrder = orderService.createNewOrder(orderDTO);
+    public OrderDTO createNewOrder(@Valid @RequestBody OrderCreateDTO orderCreateDTO) {
+        Order newOrder = orderService.createNewOrder(orderCreateDTO);
 
         return orderMapper.orderToOrderDTO(newOrder);
     }

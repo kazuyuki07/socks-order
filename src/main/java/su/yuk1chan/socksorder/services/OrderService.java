@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import su.yuk1chan.socksorder.dto.OrderCreateDTO;
 import su.yuk1chan.socksorder.dto.OrderDTO;
 import su.yuk1chan.socksorder.dto.PagedResponse;
 import su.yuk1chan.socksorder.entities.Order;
@@ -16,10 +17,8 @@ import su.yuk1chan.socksorder.exceptions.NotFoundException;
 import su.yuk1chan.socksorder.mapper.OrderMapper;
 import su.yuk1chan.socksorder.repositories.OrderRepository;
 import su.yuk1chan.socksorder.repositories.specifications.OrderSpecification;
-import su.yuk1chan.socksorder.utils.OrderNumberGenerator;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -65,15 +64,11 @@ public class OrderService {
 
     }
 
-    public Order createNewOrder(OrderDTO orderDTO) {
-        LocalDateTime dateNow = LocalDateTime.now();
-        Order newOrder = Order.builder()
-                .orderNumber(OrderNumberGenerator.generate(dateNow))
-                .producerId(orderDTO.getProducerId())
-                .status(orderDTO.getStatus())
-                .orderContents(orderDTO.getOrderContents())
-                .createdAt(dateNow)
-                .build();
+    public Order createNewOrder(OrderCreateDTO orderCreateDTO) {
+        Order newOrder = orderMapper.orderCreateDtoToOrder(orderCreateDTO);
+        if (newOrder.getOrderContents() != null) {
+            newOrder.getOrderContents().forEach(content -> content.setOrder(newOrder));
+        }
 
         return orderRepository.save(newOrder);
     }

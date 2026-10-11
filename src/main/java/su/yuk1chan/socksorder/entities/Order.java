@@ -27,6 +27,7 @@ public class Order {
     @Column(name = "producer_id")
     private Long producerId;
 
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     @OneToMany(
