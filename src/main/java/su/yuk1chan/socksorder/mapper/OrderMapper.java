@@ -12,12 +12,14 @@ import su.yuk1chan.socksorder.utils.OrderNumberGenerator;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Mapper(componentModel = "spring", imports = {LocalDateTime.class, Status.class, OrderNumberGenerator.class})
+@Mapper(componentModel = "spring", builder = @Builder(disableBuilder = true),
+        imports = { LocalDateTime.class, Status.class, OrderNumberGenerator.class }
+)
 public interface OrderMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", expression = "java(LocalDateTime.now())")
-    @Mapping(target = "status",    expression = "java(Status.ORDERED)")
+    @Mapping(target = "status", expression = "java(Status.ORDERED)")
     @Mapping(target = "orderNumber", expression = "java(OrderNumberGenerator.generate(LocalDateTime.now()))")
     Order orderCreateDtoToOrder(OrderCreateDTO orderCreateDTO);
 
@@ -31,4 +33,11 @@ public interface OrderMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void partUpdateOrder(OrderDTO orderDTO, @MappingTarget Order order);
+
+    @AfterMapping
+    default void setOrderReference(@MappingTarget Order order) {
+        if (order.getOrderContents() != null) {
+            order.getOrderContents().forEach(orderContent -> orderContent.setOrder(order));
+        }
+    }
 }

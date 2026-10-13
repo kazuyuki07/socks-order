@@ -66,9 +66,6 @@ public class OrderService {
 
     public Order createNewOrder(OrderCreateDTO orderCreateDTO) {
         Order newOrder = orderMapper.orderCreateDtoToOrder(orderCreateDTO);
-        if (newOrder.getOrderContents() != null) {
-            newOrder.getOrderContents().forEach(content -> content.setOrder(newOrder));
-        }
 
         return orderRepository.save(newOrder);
     }

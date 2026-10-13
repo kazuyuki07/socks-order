@@ -31,10 +31,10 @@ public class Order {
     private Status status;
 
     @OneToMany(
-        targetEntity = OrderContent.class, 
-        fetch = FetchType.LAZY, 
-        mappedBy = "order", 
-        cascade = CascadeType.ALL
+            targetEntity = OrderContent.class,
+            fetch = FetchType.LAZY,
+            mappedBy = "order",
+            cascade = CascadeType.ALL
     )
     private List<OrderContent> orderContents;
 
